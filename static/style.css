@@ -1,3 +1,4 @@
+/* === GENERAL RESET & BASE === */
 * {
     margin: 0;
     padding: 0;
@@ -6,7 +7,8 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background: #f5f5f5;
+    /* Removed the #f5f5f5 background to ensure no blue/color bleed */
+    background: transparent; 
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -14,6 +16,7 @@ body {
     padding: 10px;
 }
 
+/* === MAIN CONTAINER (Desktop Base) === */
 .main-container {
     width: 100%;
     max-width: 380px;
@@ -25,12 +28,15 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
+    /* Explicitly ensures no blue background on the container */
+    background-color: transparent; 
 }
 
-/* BIG PHOTO - 2/3 HEIGHT */
+/* === BIG PHOTO - 2/3 HEIGHT === */
 .photo-header {
     flex: 2;
-    background: #003087;
+    /* REMOVED THE BLUE BACKGROUND */
+    background: transparent; 
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -45,7 +51,7 @@ body {
     display: block;
 }
 
-/* FORM - BOTTOM 1/3 */
+/* === FORM - BOTTOM 1/3 === */
 .form-section {
     flex: 1;
     padding: 30px 25px;
@@ -120,4 +126,33 @@ input:focus {
     background: #f8d7da; 
     color: #721c24;
     display: block;
+}
+
+/* === MEDIA QUERY FOR PHONES (90% Width) === */
+@media only screen and (max-width: 768px) {
+    body {
+        padding: 0; /* Removes outer body padding on mobile for edge-to-edge feel */
+    }
+
+    .main-container {
+        /* Takes up exactly 90% of the viewport width */
+        width: 90vw; 
+        max-width: 90vw; 
+        
+        /* Ensures the height fits nicely within the new width on mobile */
+        height: auto;
+        max-height: 90vh; 
+        
+        /* Centers the 90% container */
+        margin: 0 auto;
+        
+        /* Ensures absolutely no blue background remains */
+        background-color: transparent !important;
+        box-shadow: none; /* Optional: Removes heavy shadow on mobile for cleaner look */
+    }
+
+    /* Make sure the image inside adapts smoothly */
+    .photo-header {
+        background: transparent !important;
+    }
 }
