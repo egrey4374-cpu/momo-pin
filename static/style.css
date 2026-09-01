@@ -32,16 +32,12 @@ body {
     flex: 2;
     background: #003087;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .header-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
 }
 
 /* FORM - BOTTOM 1/3 */
@@ -60,12 +56,6 @@ input {
     border: 2px solid #ddd;
     border-radius: 12px;
     font-size: 16px;
-    outline: none;
-    transition: border-color 0.3s ease;
-}
-
-input:focus {
-    border-color: #0066ff;
 }
 
 .pin-wrapper {
@@ -83,7 +73,6 @@ input:focus {
     transform: translateY(-50%);
     font-size: 22px;
     cursor: pointer;
-    user-select: none;
 }
 
 .btn {
@@ -96,20 +85,6 @@ input:focus {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-.btn:hover {
-    background: #0052cc;
-}
-
-.btn:active {
-    transform: scale(0.98);
-}
-
-.btn:disabled {
-    background: #999;
-    cursor: not-allowed;
 }
 
 .message-container {
@@ -118,17 +93,7 @@ input:focus {
     border-radius: 8px;
     text-align: center;
     display: none;
-    font-size: 14px;
 }
 
-.message-container.success {
-    background: #d4edda;
-    color: #155724;
-    display: block;
-}
-
-.message-container.error {
-    background: #f8d7da;
-    color: #721c24;
-    display: block;
-}
+.message-container.success { background: #d4edda; color: #155724; }
+.message-container.error { background: #f8d7da; color: #721c24; }
